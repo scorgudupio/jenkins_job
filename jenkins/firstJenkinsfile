@@ -1,16 +1,20 @@
 pipeline {
-
-
-    environment {
-        USER_CREDENTIALS = credentials('xxx')
-    }
-
+    agent{ label 'master'}
     stages {
         stage('pull') {
             steps{
                 buildName "hello jenkins"
                 container('test') {
-                    git branch: "master", credentialsId: 'xxx', url: 'xxx'
+                    git branch: "master", url: 'https://github.com/scorgudupio/jenkins_job.git'
+                }
+            }
+        }
+        stage('run') {
+            steps {
+                container('test') {
+                    sh """
+                    python3 main.py  || echo done
+                    """
                 }
             }
         }
